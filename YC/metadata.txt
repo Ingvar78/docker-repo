@@ -1,0 +1,10 @@
+#cloud-config
+users:
+  - name: ansible
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCucEO9HJX5tv******************************************************************************************************************************************************************************************************************joj7qdfnMgrigKtxnATJSa9qRy9JpxQH5giWDdXm/9nCI9wb3hgmuQd844w0CqbwrDasJpm8guedCBOnZNKf6u/5dh7bSTxkEHJy1I3gsPG81BidhQkpcsiXH8kZY7aeFmlwrME6LPVpKEhlDzux5bVE0r7xc6bGeCYPtrvdF48Bwxg06PhEQwpQeXCpaTYprK/dD+KnOUau2esEVSHevXEZL/+pH/MFvOBEneBfbOiQhyVzd4mUqQTMW4DsIyT5Wl2mIaTv6325bvAf2PxnM1AYl0I/FY8uQtzS/s*********************************************************************************************************************H2RIROers1cCsxL9S3wbEQVAlnmzev69mr3Yjgg8qJ794bLW2BQ== igor@vishenkov.ru
+
+
