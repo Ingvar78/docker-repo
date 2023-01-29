@@ -50,3 +50,4 @@ bf2b6fb1e6a9: Mounted from library/nginx
 ![](./img/docker_app.png)
 
 plugins
+rebuild
