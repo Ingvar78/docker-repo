@@ -16,8 +16,14 @@ pipeline {
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
 
-        sh "docker images"
         sh 'docker images'
+        sh 'docker images'
+      }
+    }
+
+    stage('Trigger kubernetes') {
+      steps {
+        sh 'echo \'Trigger kubernetes\''
       }
     }
 
