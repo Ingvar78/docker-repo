@@ -25,7 +25,15 @@ pipeline {
         sh 'docker images'
       }
     }
-
+    stage('Trigger kubernetes') {
+      agent any
+      when {
+        branch 'main'
+      }
+      steps {
+          sh "helm upgrade"
+      }
+    }
   }
   environment {
     IMAGE_BASE = 'egerpro/nginx-app'
