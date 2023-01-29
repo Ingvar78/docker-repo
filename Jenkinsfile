@@ -12,6 +12,14 @@ pipeline {
     DOCKERFILE_NAME = "Dockerfile-pack"
   }
   stages {
+      stage("Prepare container") {
+      agent {
+        docker {
+          image 'nginx:stable'
+          args '-v $HOME/.m2:/root/.m2'
+        }
+      }
+    }
     stage('Push images') {
       agent any
       when {
