@@ -1,11 +1,20 @@
 pipeline {
-  agent any
-  stages {
-    stage('') {
-      steps {
-        sh '''println "uname -a".execute().text
+  agent {
+    node {
+      label 'centos'
+    }
 
-println System.getenv("PATH")'''
+  }
+  stages {
+    stage('Get Credentional') {
+      steps {
+        echo ' ------------------- Get Credentials --------------------'
+        sh '''if [ ! -s /var/jenkins/credentialImported ]; then
+   curl http://localhost:8080/jnlpJars/jenkins-cli.jar -o jenkins-cli.jar
+   java -jar jenkins-cli.jar -s http://localhost:8080 import-credentials-as-xml "system::system::jenkins" < /var/jenkins/credentials.xml
+   echo \'imported\' > /var/jenkins/credentialImported
+fi
+            '''
       }
     }
 
