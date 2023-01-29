@@ -7,10 +7,21 @@ pipeline {
   }
   stages {
     stage('Get Credentional') {
-      steps {
-        echo ' ------------------- Get Credentials --------------------'
-        sh '''echo "I\'m running"
+      parallel {
+        stage('Get Credentional') {
+          steps {
+            echo ' ------------------- Get Credentials --------------------'
+            sh '''echo "I\'m running"
             '''
+          }
+        }
+
+        stage('') {
+          steps {
+            sh 'echo "i\'m to"'
+          }
+        }
+
       }
     }
 
