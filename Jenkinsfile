@@ -31,7 +31,7 @@ pipeline {
     IMAGE_BASE = 'egerpro/nginx-app:1.0.1'
     IMAGE_TAG = 'v$BUILD_NUMBER'
     IMAGE_NAME = '${env.IMAGE_BASE}:${env.IMAGE_TAG}'
-    IMAGE_NAME_LATEST = '${env.IMAGE_BASE}:latest'
+    IMAGE_NAME_LATEST = '${env.IMAGE_BASE}:1.0.1'
     DOCKERFILE_NAME = 'Dockerfile'
   }
   options {
