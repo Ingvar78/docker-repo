@@ -12,31 +12,41 @@ pipeline {
     IMAGE_NAME_LATEST = '${env.IMAGE_BASE}:latest'
     DOCKERFILE_NAME = 'Dockerfile-packaged'
   }
-  stages {
-    stage('Get Credentional') {
-      parallel {
-        stage('Get Credentional') {
-          steps {
-            echo ' ------------------- Get Credentials --------------------'
-            sh '''echo "I\'m running"
-            '''
-          }
+stages {
+    stage("Prepare container") {
+      agent {
+        docker {
+          image 'nginx:stable'
         }
-
-        stage('error') {
-          steps {
-            sh 'echo "i\'m to"'
-          }
-        }
-
       }
     }
 
-    stage('tep 3 pablish app') {
+    stage('Push images') {
+      agent any
+      when {
+        branch 'master'
+      }
       steps {
-        sh 'echo "Run 3"'
+        script {
+          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
+          docker.withRegistry('', 'dockerhub-creds') {
+            dockerImage.push()
+            dockerImage.push("latest")
+          }
+          echo "Pushed Docker Image: ${env.IMAGE_NAME}"
+        }
+        sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
     }
 
-  }
+    stage('Trigger kubernetes') {
+      agent any
+      when {
+        branch 'master'
+      }
+      steps {
+echo " ------------------- Kuber --------------------"
+       }
+     }
+   }
 }
