@@ -10,8 +10,8 @@ pipeline {
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
-            ---#dockerImage.push()
-            ---#dockerImage.push("latest")
+          echo '---dockerImage.push()'
+          echo '---dockerImage.push("latest")'
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
