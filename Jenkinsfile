@@ -11,6 +11,9 @@ pipeline {
       when {
         branch 'main'
       }
+      environment {
+        VAZAP = 'test'
+      }
       steps {
         sh '"docker version"'
         script {
