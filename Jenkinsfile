@@ -1,32 +1,25 @@
 pipeline {
   agent none
   options {
+    skipStagesAfterUnstable()
     skipDefaultCheckout()
   }
   environment {
     IMAGE_BASE = 'egerpro/nginx-app'
-    IMAGE_TAG = "v1.0.$BUILD_NUMBER"
+    IMAGE_TAG = "v$BUILD_NUMBER"
     IMAGE_NAME = "${env.IMAGE_BASE}:${env.IMAGE_TAG}"
     IMAGE_NAME_LATEST = "${env.IMAGE_BASE}:latest"
     DOCKERFILE_NAME = "Dockerfile-pack"
   }
   stages {
-    stage("Prepare container") {
+      stage("Prepare container") {
       agent {
         docker {
           image 'nginx:stable'
-        }
-        stages {
-        stage('Build') {
-          steps {
-            checkout
-            sh 'echo $env.IMAGE_BASE'
-          }
+          args '-v $HOME/.m2:/root/.m2'
         }
       }
     }
-    }
-
     stage('Push images') {
       agent any
       when {
