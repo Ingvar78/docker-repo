@@ -13,17 +13,16 @@ pipeline {
       }
       steps {
         script {
+          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
+          docker.withRegistry('', 'dockerhub-creds') {
+            dockerImage.push()
+            dockerImage.push("latest")
+          }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
 
+        sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
         sh 'docker images'
-        sh 'docker images'
-      }
-    }
-
-    stage('Trigger kubernetes') {
-      steps {
-        sh 'echo \'Trigger kubernetes\''
       }
     }
 
