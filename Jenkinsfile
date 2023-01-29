@@ -23,7 +23,6 @@ pipeline {
         sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
       }
-    }
 
     stage('Trigger kubernetes') {
       agent any
