@@ -1,7 +1,12 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label 'cebtos'
+    }
+
+  }
   stages {
-    stage('') {
+    stage('error') {
       steps {
         sh '''println "uname -a".execute().text
 
