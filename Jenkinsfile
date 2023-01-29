@@ -16,7 +16,15 @@ pipeline {
         docker {
           image 'nginx:stable'
         }
+        stages {
+        stage('Build') {
+          steps {
+            checkout
+            sh 'echo $env.IMAGE_BASE'
+          }
+        }
       }
+    }
     }
 
     stage('Push images') {
