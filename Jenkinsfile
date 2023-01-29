@@ -3,7 +3,9 @@ pipeline {
     node {
       label 'centos'
     }
-
+  }
+  options {
+    skipDefaultCheckout()
   }
   environment {
     IMAGE_BASE = 'egerpro/nginx-app'
