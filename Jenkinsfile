@@ -1,20 +1,6 @@
 pipeline {
-  agent {
-    node {
-      label 'centos'
-    }
-  }
-  options {
-    skipDefaultCheckout()
-  }
-  environment {
-    IMAGE_BASE = 'egerpro/nginx-app'
-    IMAGE_TAG = 'v$BUILD_NUMBER'
-    IMAGE_NAME = '${env.IMAGE_BASE}:${env.IMAGE_TAG}'
-    IMAGE_NAME_LATEST = '${env.IMAGE_BASE}:latest'
-    DOCKERFILE_NAME = 'Dockerfile-packaged'
-  }
-stages {
+  agent any
+  stages {
     stage('Push images') {
       agent any
       when {
@@ -29,6 +15,7 @@ stages {
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
+
         sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
     }
@@ -38,9 +25,20 @@ stages {
       when {
         branch 'master'
       }
-      steps { 
-      echo " ------------------- Kuber --------------------"
-       }
-     }
-   }
+      steps {
+        echo ' ------------------- Kuber --------------------'
+      }
+    }
+
+  }
+  environment {
+    IMAGE_BASE = 'egerpro/nginx-app'
+    IMAGE_TAG = 'v$BUILD_NUMBER'
+    IMAGE_NAME = '${env.IMAGE_BASE}:${env.IMAGE_TAG}'
+    IMAGE_NAME_LATEST = '${env.IMAGE_BASE}:latest'
+    DOCKERFILE_NAME = 'Dockerfile-packaged'
+  }
+  options {
+    skipDefaultCheckout()
+  }
 }
