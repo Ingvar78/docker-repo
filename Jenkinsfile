@@ -11,12 +11,15 @@ pipeline {
       when {
         branch 'main'
       }
-      steps {
+        steps {
+    	    echo ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}
         script {
+          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
 
-        sh "echo ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
+        sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
+      }
       }
     }
 
