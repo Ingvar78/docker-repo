@@ -12,6 +12,7 @@ pipeline {
         branch 'main'
       }
       steps {
+        sh '"docker version"'
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
