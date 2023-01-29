@@ -25,22 +25,24 @@ pipeline {
         sh 'docker images'
       }
     }
+
     stage('Trigger kubernetes') {
       agent any
       when {
         branch 'main'
       }
       steps {
-          sh "helm upgrade"
+        sh 'helm upgrade'
       }
     }
+
   }
   environment {
     IMAGE_BASE = 'egerpro/nginx-app'
     IMAGE_TAG = "v$BUILD_NUMBER"
     IMAGE_NAME = "${env.IMAGE_BASE}:${env.IMAGE_TAG}"
     IMAGE_NAME_LATEST = "${env.IMAGE_BASE}:latest"
-    DOCKERFILE_NAME = "Dockerfile"
+    DOCKERFILE_NAME = 'Dockerfile'
   }
   options {
     skipDefaultCheckout()
