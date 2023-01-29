@@ -1,7 +1,7 @@
 pipeline {
   agent {
     node {
-      label 'cebtos'
+      label 'centos'
     }
 
   }
