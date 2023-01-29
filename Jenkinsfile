@@ -24,7 +24,7 @@ stages {
     stage('Push images') {
       agent any
       when {
-        branch 'master'
+        branch 'main'
       }
       steps {
         script {
