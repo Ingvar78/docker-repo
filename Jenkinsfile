@@ -7,6 +7,7 @@ pipeline {
         branch 'main'
       }
       steps {
+        echo ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
