@@ -20,9 +20,10 @@ pipeline {
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
+
         sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
-      }
+    }
 
     stage('Trigger kubernetes') {
       agent any
@@ -40,7 +41,7 @@ pipeline {
     IMAGE_TAG = 'v$BUILD_NUMBER'
     IMAGE_NAME = '${env.IMAGE_BASE}:${env.IMAGE_TAG}'
     IMAGE_NAME_LATEST = '${env.IMAGE_BASE}:latest'
-    DOCKERFILE_NAME = 'Dockerfile-packaged'
+    DOCKERFILE_NAME = 'Dockerfile'
   }
   options {
     skipDefaultCheckout()
