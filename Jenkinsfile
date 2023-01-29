@@ -15,14 +15,6 @@ pipeline {
     DOCKERFILE_NAME = 'Dockerfile-packaged'
   }
 stages {
-    stage("Prepare container") {
-      agent {
-        any {
-          image 'nginx:stable'
-        }
-      }
-    }
-
     stage('Push images') {
       agent any
       when {
@@ -46,8 +38,8 @@ stages {
       when {
         branch 'master'
       }
-      steps {
-echo " ------------------- Kuber --------------------"
+      steps { 
+      echo " ------------------- Kuber --------------------"
        }
      }
    }
