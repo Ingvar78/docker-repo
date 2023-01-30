@@ -17,7 +17,7 @@ pipeline {
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
-
+        sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
     }
 
