@@ -21,12 +21,8 @@ pipeline {
       when {
         branch 'main'
       }
-     steps {
-	  /* Let's make sure we have the repository cloned to our workspace */
-	  checkout scm
-      }
       steps {
-        sh '"docker version"'
+	checkout scm
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
@@ -35,7 +31,6 @@ pipeline {
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
-
         sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
     }
