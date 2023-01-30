@@ -1,5 +1,9 @@
 pipeline {
-  agent any
+    agent {
+    docker {
+      image 'nginx:stable'
+    }
+  }
   stages {
     stage('Build&Push images') {
       agent any
@@ -7,7 +11,15 @@ pipeline {
         branch 'main'
       }
       steps {
-        sh 'docker build -t "${env.IMAGE_NAME}" -f ${env.DOCKERFILE_NAME} .'
+        checkout(scm: scm, changelog: true, poll: true)
+        script {
+          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
+          docker.withRegistry('', 'dockerhub-creds') {
+            dockerImage.push()
+            dockerImage.push("latest")
+          }
+          echo "Pushed Docker Image: ${env.IMAGE_NAME}"
+        }
       }
     }
 
