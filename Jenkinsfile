@@ -6,16 +6,6 @@ pipeline {
 
   }
   stages {
-    stage('Clone repository') {
-      agent any
-      when {
-        branch 'main'
-      }
-      steps {
-        checkout scm
-      }
-    }
-
     stage('Build&Push images') {
       agent any
       when {
