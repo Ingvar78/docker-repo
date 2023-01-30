@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-    docker {
-      image 'nginx:stable'
-    }
-  }
+  agent none
   stages {
     stage('Build&Push images') {
       agent any
@@ -21,6 +17,7 @@ pipeline {
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
+
       }
     }
 
