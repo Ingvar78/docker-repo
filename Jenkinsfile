@@ -11,14 +11,15 @@ pipeline {
         branch 'main'
       }
       steps {
+        echo "Pushed Docker Image: ${env.IMAGE_NAME}, DockerFile: ${env.DOCKERFILE_NAME}"
         checkout(scm: scm, changelog: true, poll: true)
         script {
-          def dockerImage = docker.build("$IMAGE_NAME", "-f $DOCKERFILE_NAME .")
+          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
             dockerImage.push()
             dockerImage.push("latest")
           }
-          echo "Pushed Docker Image: $IMAGE_NAME"
+          echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
       }
     }
@@ -40,8 +41,8 @@ pipeline {
   environment {
     IMAGE_BASE = 'egerpro/nginx-app'
     IMAGE_TAG = "v$BUILD_NUMBER"
-    IMAGE_NAME = "$IMAGE_BASE:$IMAGE_TAG"
-    IMAGE_NAME_LATEST = "$IMAGE_BASE:latest"
+    IMAGE_NAME = "${env.IMAGE_BASE}:${env.IMAGE_TAG}"
+    IMAGE_NAME_LATEST = "${env.IMAGE_BASE}:latest"
     DOCKERFILE_NAME = 'Dockerfile-pack'
   }
   options {
