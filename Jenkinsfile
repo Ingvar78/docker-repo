@@ -7,7 +7,6 @@ pipeline {
         branch 'main'
       }
       steps {
-        checkout(scm: scm, changelog: true, poll: true)
         sh 'docker build -t "${env.IMAGE_NAME}" -f ${env.DOCKERFILE_NAME} .'
       }
     }
