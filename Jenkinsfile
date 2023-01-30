@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'nginx:stable'
-    }
-
-  }
+  agent any
   stages {
     stage('Build&Push images') {
       agent any
