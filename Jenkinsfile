@@ -30,7 +30,7 @@ pipeline {
       steps {
         checkout(scm: scm, changelog: true, poll: true)
         withKubeConfig(credentialsId: 'kubernetes-creds', serverUrl: "${CLUSTER_URL}", namespace: "${CLUSTER_NAMESPACE}") {
-          sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set image.tag=${env.IMAGE_TAG}"
+          sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set image.tag=${env.IMAGE_TAG} --debug"
         }
 
       }
