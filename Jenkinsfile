@@ -7,8 +7,9 @@ pipeline {
         branch 'main'
       }
       steps {
-        echo "Pushed Docker Image: ${env.IMAGE_NAME}, DockerFile: ${env.DOCKERFILE_NAME}"
+        echo "Prepare Docker Image: ${env.IMAGE_NAME}, DockerFile: ${env.DOCKERFILE_NAME}"
         checkout(scm: scm, changelog: true, poll: true)
+        sh "echo ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST} >./site/version.txt"
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
@@ -27,8 +28,9 @@ pipeline {
         branch 'main'
       }
       steps {
+        checkout(scm: scm, changelog: true, poll: true)
         withKubeConfig(credentialsId: 'kubernetes-creds', serverUrl: "${CLUSTER_URL}", namespace: "${CLUSTER_NAMESPACE}") {
-          sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set backend.image.tag=${env.IMAGE_TAG}"
+          sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set image.tag=${env.IMAGE_TAG}"
         }
 
       }
