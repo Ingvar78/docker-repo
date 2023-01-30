@@ -10,7 +10,7 @@ pipeline {
         echo "Pushed Docker Image: ${env.IMAGE_NAME}, DockerFile: ${env.DOCKERFILE_NAME}"
         checkout(scm: scm, changelog: true, poll: true)
         script {
-          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME}")
+          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
             dockerImage.push()
             dockerImage.push("latest")
