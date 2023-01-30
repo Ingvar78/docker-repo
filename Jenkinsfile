@@ -7,8 +7,14 @@ pipeline {
   }
   stages {
    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-        checkout scm
+      agent any
+      when {
+        branch 'main'
+      }
+      steps {
+	  /* Let's make sure we have the repository cloned to our workspace */
+	  checkout scm
+      }
     }
     stage('Push images') {
       agent any
