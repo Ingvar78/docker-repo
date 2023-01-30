@@ -16,13 +16,14 @@ pipeline {
 	  checkout scm
       }
     }
-    stage('Push images') {
+    stage('Build&Push images') {
       agent any
       when {
         branch 'main'
       }
-      environment {
-        VAZAP = 'test'
+     steps {
+	  /* Let's make sure we have the repository cloned to our workspace */
+	  checkout scm
       }
       steps {
         sh '"docker version"'
