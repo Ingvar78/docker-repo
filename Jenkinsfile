@@ -13,16 +13,7 @@ pipeline {
       }
       steps {
         checkout(scm: scm, changelog: true, poll: true)
-        script {
-          def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
-          docker.withRegistry('', 'dockerhub-creds') {
-            dockerImage.push()
-            dockerImage.push("latest")
-          }
-          echo "Pushed Docker Image: ${env.IMAGE_NAME}"
-        }
-
-        sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
+        sh 'docker build -t "${env.IMAGE_NAME}" -f ${env.DOCKERFILE_NAME} .'
       }
     }
 
