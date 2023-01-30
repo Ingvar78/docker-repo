@@ -41,6 +41,8 @@ pipeline {
     IMAGE_NAME = "${env.IMAGE_BASE}:${env.IMAGE_TAG}"
     IMAGE_NAME_LATEST = "${env.IMAGE_BASE}:latest"
     DOCKERFILE_NAME = 'Dockerfile-pack'
+    HELM_PROJECT = 'my-app'
+    HELM_CHART = './neto-app/'
   }
   options {
     skipStagesAfterUnstable()
