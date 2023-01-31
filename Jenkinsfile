@@ -14,7 +14,7 @@ pipeline {
             fileContentReplaceConfig(
               configs: [fileContentReplaceItemConfig(
                 search: 'Version=1.0.1',
-                replace: 'v${env.IMAGE_TAG}'
+                replace: ${env.IMAGE_TAG}
               )
                        ],
               fileEncoding: 'UTF-8',
