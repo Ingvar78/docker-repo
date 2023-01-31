@@ -33,6 +33,9 @@ pipeline {
           sh "sleep 5;"
           sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set image.tag=${env.IMAGE_TAG} --debug"
         }
+        withCredentials([file(credentialsId: "$KUBE_KUBECONFIG", variable: 'KUBE_CONFIG_FILE')]) {
+                                sh 'helm list --kubeconfig ${KUBE_CONFIG_FILE} -A'
+        }
 
       }
     }
