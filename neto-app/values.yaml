@@ -48,7 +48,7 @@ ingress:
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: testapp.eger.local
+    - host: testapp.eger.pro
       paths:
         - path: /
           pathType: ImplementationSpecific
