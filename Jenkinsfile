@@ -15,8 +15,8 @@ pipeline {
           configs: [
             fileContentReplaceConfig(
               configs: [fileContentReplaceItemConfig(
-                search: '^(Version=)([0-9]+\.[0-9]+\.[0-9]+)$',
-                replace: '$11.0.${BUILD_ID}',
+                search: '^(Version=)([0-9]+.[0-9]+.[0-9]+)$',
+                replace: '2.0.${BUILD_ID}',
                 matchCount: 1,verbose: false,
               )
                        ],
