@@ -31,7 +31,7 @@ pipeline {
       steps {
         checkout(scm: scm, changelog: true, poll: true)
         withCredentials(bindings: [file(credentialsId: "$KUBE_KUBECONFIG", variable: 'KUBE_CONFIG_FILE')]) {
-          sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set backend.image.tag=${env.IMAGE_TAG} --kubeconfig ${KUBE_CONFIG_FILE}"
+          sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set image.tag=${env.IMAGE_TAG} --kubeconfig ${KUBE_CONFIG_FILE}"
           sh 'helm list --kubeconfig ${KUBE_CONFIG_FILE} -A'
         }
 
