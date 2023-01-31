@@ -8,9 +8,7 @@ pipeline {
       }
       steps {
         echo "Prepare Docker Image: ${env.IMAGE_NAME}, DockerFile: ${env.DOCKERFILE_NAME}"
-        checkout(scm: scm, changelog: true, poll: true)
-        sh "echo ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST} >./site/version.txt"
-        
+        checkout(scm: scm, changelog: true, poll: true)      
         contentReplace(
           configs: [
             fileContentReplaceConfig(
@@ -24,7 +22,6 @@ pipeline {
             )
           ]
         )
-        
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
           docker.withRegistry('', 'dockerhub-creds') {
