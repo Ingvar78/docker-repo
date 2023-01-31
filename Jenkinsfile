@@ -18,6 +18,7 @@ pipeline {
           }
           echo "Pushed Docker Image: ${env.IMAGE_NAME}"
         }
+
         sh "docker rmi ${env.IMAGE_NAME} ${env.IMAGE_NAME_LATEST}"
       }
     }
@@ -30,11 +31,12 @@ pipeline {
       steps {
         checkout(scm: scm, changelog: true, poll: true)
         withKubeConfig(credentialsId: 'kubernetes-creds', serverUrl: "${CLUSTER_URL}", namespace: "${CLUSTER_NAMESPACE}") {
-          sh "sleep 5;"
+          sh 'sleep 5;'
           sh "helm upgrade ${HELM_PROJECT} ${HELM_CHART} --reuse-values --set image.tag=${env.IMAGE_TAG} --debug"
         }
-        withCredentials([file(credentialsId: "$KUBE_KUBECONFIG", variable: 'KUBE_CONFIG_FILE')]) {
-                                sh 'helm list --kubeconfig ${KUBE_CONFIG_FILE} -A'
+
+        withCredentials(bindings: [file(credentialsId: "$KUBE_KUBECONFIG", variable: 'KUBE_CONFIG_FILE')]) {
+          sh 'helm list --kubeconfig ${KUBE_CONFIG_FILE} -A'
         }
 
       }
@@ -49,6 +51,7 @@ pipeline {
     DOCKERFILE_NAME = 'Dockerfile-pack'
     HELM_PROJECT = 'my-app'
     HELM_CHART = './neto-app/'
+    KUBE_CONFIG_FILE = 'kube_config_file'
   }
   options {
     skipStagesAfterUnstable()
