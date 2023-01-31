@@ -15,7 +15,7 @@ pipeline {
             configs: [
                       fileContentReplaceConfig(
                         configs: [fileContentReplaceItemConfig(
-                          search: '(Version=)([0-9]+\\.[0-9]+\\.[0-9]+)',
+                          search: '^(Version=)([0-9]+\.[0-9]+\.[0-9]+)$',
                           replace: '$11.0.${BUILD_ID}',
                           matchCount: 1,verbose: false,
                         )
@@ -25,6 +25,17 @@ pipeline {
     )
   ]
 )
+        contentReplace(
+       configs: [
+           fileContentReplaceConfig(
+               configs: [
+                   fileContentReplaceItemConfig(
+                       search: 'SHORTCOMMITID',
+                       replace: "${env.NEW_COMMITIDSHORT}")
+                   ],
+               fileEncoding: 'UTF-8',
+               filePath: "./site/versions.txt")
+        ]) 
         
         script {
           def dockerImage = docker.build("${env.IMAGE_NAME}", "-f ${env.DOCKERFILE_NAME} .")
