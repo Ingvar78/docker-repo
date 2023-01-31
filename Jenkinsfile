@@ -46,6 +46,7 @@ pipeline {
     DOCKERFILE_NAME = 'Dockerfile-pack'
     HELM_PROJECT = 'my-app'
     HELM_CHART = './neto-app/'
+    KUBE_KUBECONFIG = 'devops-cluster-admin'
   }
   options {
     skipStagesAfterUnstable()
