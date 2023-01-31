@@ -46,7 +46,6 @@ pipeline {
     DOCKERFILE_NAME = 'Dockerfile-pack'
     HELM_PROJECT = 'my-app'
     HELM_CHART = './neto-app/'
-    KUBE_CONFIG_FILE = 'kube_config_file'
   }
   options {
     skipStagesAfterUnstable()
