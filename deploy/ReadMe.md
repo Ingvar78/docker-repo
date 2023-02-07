@@ -169,6 +169,26 @@ users:
 ```
 
 ```
+/1.1$ tree 
+
+.
+├── cicd_instance.tf - инстансы для Jenkins
+├── generate_inventory.sh - генерация inventory для последующего использования в kubespray
+├── k8s_deployer.tf	- инстанс для настройки kubernetes
+├── k8s_instance.tf	- инстансы kubernetes
+├── local.tf		- описание инстансов kubernetes через локальные переменные
+├── main.tf		- основной модуль
+├── network.tf		- описание создаваемых сетей через локальные переменнные
+├── outputs.tf		- вывод результата создания инфраструктуры 
+├── terraform.tfvars	- переменные terraform
+├── variables.tf	- описание переменных terraform со значениями по умолчанию
+└── versions.tf		- описание провайдера ЯО для terraform и хранения состояния в S3 bucket
+
+0 directories, 11 files
+
+```
+
+```
 /1.1 $ terraform plan - строим план, проверяем что получим в итоге
 
 /1.1 $ terraform apply -auto-approve - применяем план
@@ -357,9 +377,187 @@ users:
 </details>
 
 <details>
-    <summary>2. Создаём сервисный аккаунт для работы с YC в рамках проекта</summary>
+    <summary>5. Установка Jenkin. Настройка CI/CD</summary>
     <br>
+5.1. Для настройки Jenkins и агентов используется Ansible, предварительно необходимо внести корректировки в файл [/deploy/5.0/Jenkins/inventory/cicd/hosts.yml](5.0/Jenkins/inventory/cicd/hosts.yml) указав IP самого jenkins и агента(ов)
 
-    </br>
+[Готовый плэйбук Jenkins](./5.0/Jenkins/)
+
+```
+$ ansible-playbook -i inventory/cicd/hosts.yml jenkins.yml
+```
+
+5.2. После развёртывания перейти в web-интерфейс и следуя подсказке авторизоваться. Доустановить необходимые плагины. Подключить агенты.
+
+5.3. Добавить необходимые локальные и глобальные переменные.
+
+для взаммодействия с kubernetes создать сервисный аккаунт с соответсвующими ролями, экспортировать серкрет в файл и на его основе подготовить kubeconf
+
+```
+kubectl apply -f << EOF -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${saname}
+  annotations:
+    createdBy: "for testing helm in jenkins" 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: deployer-secret
+  annotations:
+    kubernetes.io/service-account.name: deployer
+type: kubernetes.io/service-account-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ${saname}-rb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ${saname}
+subjects:
+- kind: ServiceAccount
+  name: ${saname}
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ${saname}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  - services
+  - configmaps
+  - secrets
+  - namespaces
+  verbs:
+  - '*'
+- apiGroups:
+  - "apps"
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - '*'
+- apiGroups:
+  - "networking.k8s.io"
+  resources:
+  - ingresses
+  verbs:
+  - '*'
+EOF
+
+
+serviceaccount/deployer configured
+secret/deployer-secret created
+clusterrolebinding.rbac.authorization.k8s.io/deployer-rb unchanged
+clusterrole.rbac.authorization.k8s.io/deployer unchanged
+iva@c9v:~/Documents/Diplom/5.0/CI_CD $ kubectl get secrets deployer-secret -o yaml >deployer-sa.json
+
+```
+
+
 </details>
 
+
+<details>
+    <summary>6. Настройка мониторинга </summary>
+    <br>
+Пример настройки и развёртывания системы мониторинга используя kube-prometheus.
+
+*Доступ непосредственно к web-интерфейсу prometheus будет реализован при развёртывании приложения на следующих шагах, приведённые данные в данном файле лишь демонстрируют ход предварительного развёртывания и проверки.
+
+
+# Create the namespace and CRDs, and then wait for them to be available before creating the remaining resources
+# Note that due to some CRD size we are using kubectl server-side apply feature which is generally available since kubernetes 1.22.
+# If you are using previous kubernetes versions this feature may not be available and you would need to use kubectl create instead.
+kubectl apply --server-side -f manifests/setup
+kubectl wait \
+    --for condition=Established \
+    --all CustomResourceDefinition \
+    --namespace=monitoring
+kubectl apply -f manifests/
+
+# Access UIs
+
+Prometheus, Grafana, and Alertmanager dashboards can be accessed quickly using `kubectl port-forward` after running the quickstart via the commands below. Kubernetes 1.10 or later is required.
+
+> Note: There are instructions on how to route to these pods behind an ingress controller in the [Exposing Prometheus/Alermanager/Grafana via Ingress](customizations/exposing-prometheus-alertmanager-grafana-ingress.md) section.
+
+## Prometheus
+
+```shell
+$ kubectl --namespace monitoring port-forward svc/prometheus-k8s 9090
+```
+
+Then access via [http://localhost:9090](http://localhost:9090)
+
+## Grafana
+
+```shell
+$ kubectl --namespace monitoring port-forward svc/grafana 3000
+```
+
+Then access via [http://localhost:3000](http://localhost:3000) and use the default grafana user:password of `admin:admin`.
+
+## Alert Manager
+
+```shell
+$ kubectl --namespace monitoring port-forward svc/alertmanager-main 9093
+```
+
+Then access via [http://localhost:9093](http://localhost:9093)
+
+
+# Ход развёртывания:
+
+```
+iva@c9v:~/Documents/Diplom/4.0 $ git clone https://github.com/prometheus-operator/kube-prometheus.git
+iva@c9v:~/Documents/Diplom/4.0/kube-prometheus  (main)$ kubectl wait \
+        --for condition=Established \
+        --all CustomResourceDefinition \
+        --namespace=monitoring
+iva@c9v:~/Documents/Diplom/4.0/kube-prometheus  (main)$ kubectl apply -f manifests/
+
+iva@c9v:~/Documents/Diplom/4.0/kube-prometheus  (main)$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
+<cut>...</cut>
+monitoring    alertmanager-main-0                        2/2     Running   0          115s
+monitoring    alertmanager-main-1                        2/2     Running   0          115s
+monitoring    alertmanager-main-2                        2/2     Running   0          115s
+monitoring    blackbox-exporter-6fd586b445-tcmg8         3/3     Running   0          2m29s
+monitoring    grafana-9f58f8675-9p24g                    1/1     Running   0          2m18s
+monitoring    kube-state-metrics-66659c89c-jl9nt         3/3     Running   0          2m16s
+monitoring    node-exporter-92b6n                        2/2     Running   0          2m14s
+monitoring    node-exporter-hjzzl                        2/2     Running   0          2m14s
+monitoring    node-exporter-pc4q7                        2/2     Running   0          2m14s
+monitoring    node-exporter-pxws2                        2/2     Running   0          2m14s
+monitoring    prometheus-adapter-757f9b4cf9-msw97        1/1     Running   0          2m11s
+monitoring    prometheus-adapter-757f9b4cf9-zw4bm        1/1     Running   0          2m11s
+monitoring    prometheus-k8s-0                           2/2     Running   0          114s
+monitoring    prometheus-k8s-1                           2/2     Running   0          114s
+monitoring    prometheus-operator-776c6c6b87-xhdpn       2/2     Running   0          2m11s
+
+```
+
+После развёртывания необходимо удалить одно из правил создаваемое по умолчанию препятствующее доступу из вне к grafana
+
+```
+$ kubectl -n monitoring delete networkpolicies.networking.k8s.io grafana
+```
+
+опубликовать графану наружу используя [playbook](./4.0/apps/):
+
+```
+$ kubectl apply -f ingress.yaml -f service.yaml 
+
+```
+    </br>
+</details>
