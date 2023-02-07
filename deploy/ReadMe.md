@@ -356,7 +356,7 @@ users:
 
 </details>
 
-details>
+<details>
     <summary>2. Создаём сервисный аккаунт для работы с YC в рамках проекта</summary>
     <br>
 
