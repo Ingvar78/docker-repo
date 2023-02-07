@@ -1,3 +1,5 @@
+Пункт 1. приводится как справочный для настройки базовых 
+
 <details>
     <summary>1. Готовим окружение для работы с YC</summary>
     <br>
@@ -66,17 +68,67 @@ AWS_ACCESS_KEY_ID: Идентификатор ключа доступа
 
 AWS_SECRET_ACCESS_KEY: Секретный ключ доступа
 
-добавляем параметры к нашему окружению:
+-- добавляем параметры к нашему окружению:
 
 ```
 export YC_TOKEN='AQAEA7**************'
 export AWS_ACCESS_KEY_ID='YCAJEou5UE*****************'
 export AWS_SECRET_ACCESS_KEY='YCOX5m-*************************'
 ```
-так же можно внести эти параметры в .bashrc
+-- так же можно внести эти параметры в .bashrc
 
-</br>
+    </br>
 </details>
 
 
-![](./ReadMe.md)
+<details>
+    <summary>2. Создаём сервисный аккаунт для работы с YC в рамках проекта и bucket</summary>
+    <br>
+
+В директории репозитория [deploy/1.0](./1.0/) расположены скрипты terraform для создания сервисного аккаунта и bucket для хранения текущего состояния инфраструктуры.
+
+Перед выполнением terraform необходимо внести изменения в terraform.tfvars, указав соответсвующие параметры YC и данные сервисного аккаунта созданного на "Шаге 1" либо имеющегося административного аккаунта.
+
+```
+$ cat terraform.tfvars 
+yc_cloud_id              = "b1gos10ashr7cgusvgg9"
+yc_folder_id             = "b1gm6im3mcuc36r6kn8s"
+yc_zone                  = "ru-central1-a"
+service_account_key_file = "../YC/tf_sa_key.json"
+sa_name			 = "neto-fdevops-13"
+bucket_tf		 = "neto-bucket-fdevops-13"
+
+```
+
+```
+$ terraform plan
+$ terraform apply -auto-approve
+$ terraform output -json sa_json_key_terraform >../YC/sa_json_key_terraform.json
+```
+
+Результатом выполнения будет создание bucket S3, сервисного аккаунта с ролью editor, файла с данными сервисного аккаунта - понадобятся нам в дальнейшем и будут использованы на всём протяжении.
+
+    </br>
+</details>
+
+details>
+    <summary>3. Создаyние инфраструктуры в YC</summary>
+    <br>
+
+    </br>
+</details>
+
+details>
+    <summary>2. Создаём сервисный аккаунт для работы с YC в рамках проекта</summary>
+    <br>
+
+    </br>
+</details>
+
+details>
+    <summary>2. Создаём сервисный аккаунт для работы с YC в рамках проекта</summary>
+    <br>
+
+    </br>
+</details>
+
