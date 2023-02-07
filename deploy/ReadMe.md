@@ -530,6 +530,131 @@ $ kubectl apply -f ingress.yaml -f service.yaml
 
 
 <details>
-    <summary>6. Настройка мониторинга </summary>
+    <summary>7. Atlantis </summary>
     <br>
+
+[Порядок настрой Atlantis](https://www.runatlantis.io/docs/installation-guide.html)
+
+
+7.1. Создайте учетные данные для доступа к хосту GitHub
+
+7.2. Добавьте репозиторий runatlantis в helm
+
+```
+$ helm repo add runatlantis https://runatlantis.github.io/helm-charts
+```
+
+7.3. Создать values.yaml файл, после чего отредактировать, внеся соответсвующие креды и параметры.
+
+[Пример моей конфигурации для GitHub](./5.0/Atlantis/)
+
+```
+$ helm inspect values runatlantis/atlantis > values_latest.yaml
+```
+
+```
+github: {}
+github:
+   user: Ingvar78
+   token: 'g***' - токен с GitHub
+   secret: 'NOIg***************i' - WebHook
+
+....
+
+orgAllowlist: github.com/Ingvar78/*
+
+```
+
+Развёртывание Atlantis:
+
+``` 
+$  helm install atlantis runatlantis/atlantis -f values_latest.yaml --debug
+
+```
+
+    
 </details>
+
+
+<details>
+    <summary>8. Результат </summary>
+    <br>
+
+```
+$ kubectl get pods -A
+NAMESPACE       NAME                                       READY   STATUS    RESTARTS       AGE
+app-ns-stage    my-app-neto-app-77f54c7885-h9tw4           1/1     Running   0              23h
+atlantis        atlantis-0                                 1/1     Running   0              10d
+ingress-nginx   ingress-nginx-controller-gh8j5             1/1     Running   0              19d
+ingress-nginx   ingress-nginx-controller-tfrhl             1/1     Running   0              19d
+ingress-nginx   ingress-nginx-controller-zh2ll             1/1     Running   0              19d
+kube-system     calico-kube-controllers-75748cc9fd-c8hdm   1/1     Running   0              19d
+kube-system     calico-node-qqrds                          1/1     Running   0              19d
+kube-system     calico-node-r9xss                          1/1     Running   0              19d
+kube-system     calico-node-tbgk7                          1/1     Running   0              19d
+kube-system     calico-node-tlp4b                          1/1     Running   0              19d
+kube-system     coredns-588bb58b94-brlw4                   1/1     Running   0              19d
+kube-system     coredns-588bb58b94-pjgtd                   1/1     Running   0              19d
+kube-system     dns-autoscaler-5b9959d7fc-pfmc9            1/1     Running   0              19d
+kube-system     kube-apiserver-cp1                         1/1     Running   1              19d
+kube-system     kube-controller-manager-cp1                1/1     Running   2 (5d6h ago)   19d
+kube-system     kube-proxy-d2lp7                           1/1     Running   0              19d
+kube-system     kube-proxy-h55zl                           1/1     Running   0              19d
+kube-system     kube-proxy-vlfcx                           1/1     Running   0              19d
+kube-system     kube-proxy-zjqml                           1/1     Running   0              19d
+kube-system     kube-scheduler-cp1                         1/1     Running   2 (5d6h ago)   19d
+kube-system     metrics-server-6bd8d699c5-5vzhx            1/1     Running   0              19d
+kube-system     nginx-proxy-node1                          1/1     Running   0              19d
+kube-system     nginx-proxy-node2                          1/1     Running   0              19d
+kube-system     nginx-proxy-node3                          1/1     Running   0              19d
+kube-system     nodelocaldns-5gzk7                         1/1     Running   0              19d
+kube-system     nodelocaldns-b7w4m                         1/1     Running   0              19d
+kube-system     nodelocaldns-m7s79                         1/1     Running   0              19d
+kube-system     nodelocaldns-n4b7c                         1/1     Running   0              19d
+monitoring      alertmanager-main-0                        2/2     Running   1 (19d ago)    19d
+monitoring      alertmanager-main-1                        2/2     Running   0              19d
+monitoring      alertmanager-main-2                        2/2     Running   0              19d
+monitoring      blackbox-exporter-6fd586b445-jhgqw         3/3     Running   0              19d
+monitoring      grafana-9f58f8675-bjg7x                    1/1     Running   0              19d
+monitoring      kube-state-metrics-66659c89c-xsqmv         3/3     Running   0              19d
+monitoring      node-exporter-7mqpm                        2/2     Running   0              19d
+monitoring      node-exporter-p2slj                        2/2     Running   0              19d
+monitoring      node-exporter-t9r74                        2/2     Running   0              19d
+monitoring      node-exporter-tfshd                        2/2     Running   0              19d
+monitoring      prometheus-adapter-757f9b4cf9-54ts6        1/1     Running   0              19d
+monitoring      prometheus-adapter-757f9b4cf9-5w46s        1/1     Running   0              19d
+monitoring      prometheus-k8s-0                           2/2     Running   0              19d
+monitoring      prometheus-k8s-1                           2/2     Running   0              19d
+monitoring      prometheus-operator-776c6c6b87-wbr5w       2/2     Running   0              19d
+```
+
+2. Http доступ к web интерфейсу [grafana](http://grafana.eger.pro/). 
+
+![](./img/4.0/grafana-01.png)
+
+3. Дашборды в grafana отображающие состояние Kubernetes кластера.
+
+![](./img/4.0/grafana-02.png)
+
+4. http доступ к тестовому приложению [https://testapp.eger.pro/](https://testapp.eger.pro/).
+
+![](./img/4.0/test-app-01.png)
+
+5. [Helm Atlantis](./5.0/Atlantis/)
+
+![](./img/5.0/atlantis-02.png)
+
+![](./img/5.0/atlantis-03.png)
+
+Сборка и публикация приложения в kubernetes кластере.
+
+![](./img/5.0/Jenkins-03.png)
+
+![](./img/5.0/Jenkins-04.png)
+
+![](./img/5.0/Jenkins-05.png)
+
+
+
+</details>
+
