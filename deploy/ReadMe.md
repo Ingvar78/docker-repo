@@ -379,7 +379,7 @@ users:
 <details>
     <summary>5. Установка Jenkin. Настройка CI/CD</summary>
     <br>
-5.1. Для настройки Jenkins и агентов используется Ansible, предварительно необходимо внести корректировки в файл [/deploy/5.0/Jenkins/inventory/cicd/hosts.yml](5.0/Jenkins/inventory/cicd/hosts.yml) указав IP самого jenkins и агента(ов)
+5.1. Для настройки Jenkins и агентов используется Ansible, предварительно необходимо внести корректировки в файл [deploy/5.0/Jenkins/inventory/cicd/hosts.yml](5.0/Jenkins/inventory/cicd/hosts.yml) указав IP самого jenkins и агента(ов)
 
 [Готовый плэйбук Jenkins](./5.0/Jenkins/)
 
