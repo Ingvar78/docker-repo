@@ -472,7 +472,7 @@ iva@c9v:~/Documents/Diplom/5.0/CI_CD $ kubectl get secrets deployer-secret -o ya
 ![](./img/5.0/Jenkins-first-04.png)
 ![](./img/5.0/Jenkins-first-05.png)
 ![](./img/5.0/Jenkins-first-06.png)
-![](./img/5.0/)
+![](./img/5.0/Jenkins-first-07.png)
 
 </details>
 
