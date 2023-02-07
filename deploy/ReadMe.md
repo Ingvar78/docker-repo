@@ -636,7 +636,7 @@ monitoring      prometheus-operator-776c6c6b87-wbr5w       2/2     Running   0  
 
 ![](./img/4.0/grafana-02.png)
 
-4. http доступ к тестовому приложению [https://testapp.eger.pro/](https://testapp.eger.pro/).
+4. http доступ к тестовому приложению [http://testapp.eger.pro/](http://testapp.eger.pro/).
 
 ![](./img/4.0/test-app-01.png)
 
