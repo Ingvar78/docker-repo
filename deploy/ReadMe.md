@@ -474,8 +474,6 @@ iva@c9v:~/Documents/Diplom/5.0/CI_CD $ kubectl get secrets deployer-secret -o ya
 ![](./img/5.0/Jenkins-first-06.png)
 ![](./img/5.0/)
 
-
-
 </details>
 
 
@@ -527,6 +525,11 @@ $ kubectl apply -f ingress.yaml -f service.yaml
 
 ```
 
+</details>
 
-    </br>
+
+
+<details>
+    <summary>6. Настройка мониторинга </summary>
+    <br>
 </details>
