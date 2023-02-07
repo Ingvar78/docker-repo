@@ -111,7 +111,7 @@ $ terraform output -json sa_json_key_terraform >../YC/sa_json_key_terraform.json
     </br>
 </details>
 
-details>
+<details>
     <summary>3. Создаyние инфраструктуры в YC</summary>
     <br>
 
