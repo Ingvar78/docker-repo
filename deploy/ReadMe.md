@@ -240,7 +240,7 @@ ssh ansible@10.0.20.16
 ssh ansible@10.0.30.30
 ```
 
-клонируем репозиторий kubespray и производим настройку - выполняется на будущем controlplayn либо на deploer-хосте (в данном примере установка производилась с deployer)...
+4.2. Клонируем репозиторий kubespray и производим настройку - выполняется на будущем controlplayn либо на deploer-хосте (в данном примере установка производилась с deployer)...
 
 ```
 $ git clone https://github.com/kubernetes-sigs/kubespray
@@ -307,7 +307,7 @@ supplementary_addresses_in_ssl_keys: [51.250.1.219]
 ansible@deployer:~/kubespray$ ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b -v
 ```
 
-После окончания установки подключаемся к хосту controlplane по ssh и выполняем копируем сертификаты для доступа к нашему кластеру.
+После окончания установки подключаемся к хосту controlplane по ssh и копируем сертификаты для доступа к нашему кластеру.
 
 ```
 $ {     mkdir -p $HOME/.kube;     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config;     sudo chown $(id -u):$(id -g) $HOME/.kube/config; }
@@ -323,6 +323,36 @@ node2   Ready    <none>          18d   v1.25.6
 node3   Ready    <none>          18d   v1.25.6
 
 ```
+
+4.3 Настраиваем локальный доступ к кластеру, для этого переносим данные config и корректируем адрес сервера.
+
+-- для огранизации ограниченного в правах доступа можно создать сервисный аккаунт с минимальными правами, как это сделать будет описано ниже.
+
+```
+~/.kube $ cat config 
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0t<cut></cut>RS0tLS0tCg==
+    server: https://51.250.1.219:6443
+  name: cluster.local
+contexts:
+- context:
+    cluster: cluster.local
+    namespace: app-ns-stage
+    user: kubernetes-admin
+  name: kubernetes-admin@cluster.local
+current-context: kubernetes-admin@cluster.local
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FU<cut></cut>BDRVJUSUZJQ0FURS0tLS0tCg==
+    client-key-data: LS0tLS1CRUdJTiBSU0EgUF<cut></cut>SBLRVktLS0tLQo=
+
+```
+
 
 </details>
 
