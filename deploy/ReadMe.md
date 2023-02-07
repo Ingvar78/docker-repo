@@ -463,6 +463,17 @@ iva@c9v:~/Documents/Diplom/5.0/CI_CD $ kubectl get secrets deployer-secret -o ya
 
 ```
 
+5.3 Подключить текущий репозиторий через multipipeline.
+
+![](/img/5.0/Jenkins-first-01.png)
+![](/img/5.0/Jenkins-first-02.png)
+![](/img/5.0/Jenkins-first-03.png)
+![](/img/5.0/Jenkins-first-04.png)
+![](/img/5.0/Jenkins-first-05.png)
+![](/img/5.0/Jenkins-first-06.png)
+![](/img/5.0/)
+
+
 
 </details>
 
