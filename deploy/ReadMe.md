@@ -205,10 +205,9 @@ k8s_node_IP = [
 ]
 workspace = "stage"
 ```
-
 </details>
 
-details>
+<details>
     <summary>4. Разворачиваем кластер используя kubesray</summary>
     <br>
 
